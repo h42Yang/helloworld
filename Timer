@@ -1,0 +1,24 @@
+_remindLaterTimer.Elapsed += delegate
+{
+    // 1. 立即断开定时器自身引用，防止重复进入
+    _remindLaterTimer = null;
+
+    if (context != null)
+    {
+        try
+        {
+            // 2. 通过同步上下文把 Start 封送到原始线程执行
+            context.Send(_ => Start(), null);
+        }
+        catch (InvalidAsynchronousStateException)
+        {
+            // 3. 若上下文已异步状态无效（例如线程已退出），直接调用 Start
+            Start();
+        }
+    }
+    else
+    {
+        // 4. 没有同步上下文时，直接调用 Start
+        Start();
+    }
+};

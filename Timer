@@ -1,6 +1,7 @@
 _remindLaterTimer.Elapsed += delegate
 {
     // 1. 立即断开定时器自身引用，防止重复进入
+    _remindLaterTimer.Stop();
     _remindLaterTimer = null;
 
     if (context != null)
@@ -22,3 +23,4 @@ _remindLaterTimer.Elapsed += delegate
         Start();
     }
 };
+_remindLaterTimer.Start();
